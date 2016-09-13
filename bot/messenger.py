@@ -93,3 +93,11 @@ class Messenger(object):
         else:
             answer = "Sorry, Niets in de refter vandaag"
             self.send_message(channel_id, answer)
+    def send_suggestie(self, channel_id):
+        question = "Ik kijk even na wat de suggestie deze week is."
+        self.send_message(channel_id, question)
+        self.clients.send_user_typing_pause(channel_id)
+
+        for string in  digipolis.find(string=re.compile("Suggestie")).find_next("td").stripped_strings:
+            answer = string
+        self.send_message(channel_id, answer)
