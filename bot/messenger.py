@@ -1,5 +1,12 @@
 import logging
 import random
+from bs4 import BeautifulSoup
+import re
+import urllib2
+response = urllib2.urlopen('http://www.metsense.be/nl/onze-uitbatingen#bedrijfsrestaurants')
+html = response.read()
+soup = BeautifulSoup(html,"html.parser")
+digipolis = soup.find("h3",string="Digipolis").find_next(class_="restaurant-menu")
 
 logger = logging.getLogger(__name__)
 
@@ -59,3 +66,12 @@ class Messenger(object):
             "color": "#7CD197",
         }
         self.clients.web.chat.post_message(channel_id, txt, attachments=[attachment], as_user='true')
+
+    def send_menu(self, channel_id):
+        question = "Het menu bij Digipolis is vandaag:"
+        self.send_message(channel_id, question)
+        self.clients.send_user_typing_pause(channel_id)
+
+        for string in  digipolis.find(string=re.compile("Maandag")).find_next("td").stripped_strings:
+            answer = repr(string)
+        self.send_message(channel_id, answer)
