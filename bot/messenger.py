@@ -73,5 +73,5 @@ class Messenger(object):
         self.clients.send_user_typing_pause(channel_id)
 
         for string in  digipolis.find(string=re.compile("Maandag")).find_next("td").stripped_strings:
-            answer = repr(string)
+            answer = repr(string).encode("utf-8")
         self.send_message(channel_id, answer)
