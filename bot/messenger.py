@@ -1,3 +1,4 @@
+import datetime
 import logging
 import random
 from bs4 import BeautifulSoup
@@ -7,6 +8,19 @@ response = urllib2.urlopen('http://www.metsense.be/nl/onze-uitbatingen#bedrijfsr
 html = response.read()
 soup = BeautifulSoup(html,"html.parser")
 digipolis = soup.find("h3",string="Digipolis").find_next(class_="restaurant-menu")
+dayOfWeek = datetime.datetime.today().weekday()
+if dayOfWeek == 0:
+    search = "Maandag"
+elif dayOfWeek == 1:
+    search = "Dinsdag"
+elif dayOfWeek == 2:
+    search = "Woensdag"
+elif dayOfWeek == 3:
+    search = "Donderdag"
+elif dayOfWeek == 4:
+    search = "Vrijdag"
+else
+    search = False
 
 logger = logging.getLogger(__name__)
 
@@ -68,10 +82,14 @@ class Messenger(object):
         self.clients.web.chat.post_message(channel_id, txt, attachments=[attachment], as_user='true')
 
     def send_menu(self, channel_id):
-        question = "Het menu bij Digipolis is vandaag:"
-        self.send_message(channel_id, question)
-        self.clients.send_user_typing_pause(channel_id)
+        if search != False:
+            question = "Het menu bij Digipolis is vandaag:"
+            self.send_message(channel_id, question)
+            self.clients.send_user_typing_pause(channel_id)
 
-        for string in  digipolis.find(string=re.compile("Maandag")).find_next("td").stripped_strings:
-            answer = string
-        self.send_message(channel_id, answer)
+            for string in  digipolis.find(string=re.compile(search)).find_next("td").stripped_strings:
+                answer = string
+            self.send_message(channel_id, answer)
+        else:
+            answer = "Sorry, Niets in de refter vandaag"
+            self.send_message(channel_id, answer)
