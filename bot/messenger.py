@@ -19,7 +19,7 @@ elif dayOfWeek == 3:
     search = "Donderdag"
 elif dayOfWeek == 4:
     search = "Vrijdag"
-else
+else:
     search = False
 
 logger = logging.getLogger(__name__)
