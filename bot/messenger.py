@@ -31,13 +31,10 @@ class Messenger(object):
 
     def write_help_message(self, channel_id):
         bot_uid = self.clients.bot_user_id()
-        txt = '{}\n{}\n{}\n{}'.format(
-            "Hallo. Ik ben de LPA-slack-robot.  Ik *_antwoord_* op volgende vragen:",
-            "> `<@" + bot_uid + "> menu` - Ik zoek op welke soep er vandaag in Digipolis wordt geserveerd",
-            "> `<@" + bot_uid + "> suggestie` - Ik zoek op wat het broodje van de week is",
-            "> `hi <@" + bot_uid + ">` - I'll respond with a randomized greeting mentioning your user. :wave:",
-            "> `<@" + bot_uid + "> joke` - I'll tell you one of my finest jokes, with a typing pause for effect. :laughing:",
-            "> `<@" + bot_uid + "> attachment` - I'll demo a post with an attachment using the Web API. :paperclip:")
+        txt = '{}\n{}\n{}'.format(
+            "Hallo. Ik ben de LPA-slack-robot.  Je kan verschillende dingen vragen. Bijvoorbeeld:",
+            "> `<@" + bot_uid + "> Wat staat er op de menu?` - Ik zoek op welke soep er vandaag in Digipolis wordt geserveerd",
+            "> `<@" + bot_uid + "> Wat is de suggestie?` - Ik zoek op wat het broodje van de week is")
         self.send_message(channel_id, txt)
 
     def write_greeting(self, channel_id, user_id):
