@@ -5,27 +5,13 @@ from bs4 import BeautifulSoup
 import re
 import urllib2
 
+
+
 def getMenu():
 
-    response = urllib2.urlopen('http://www.metsense.be/nl/onze-uitbatingen#bedrijfsrestaurants')
-    html = response.read()
-    soup = BeautifulSoup(html,"html.parser")
-    digipolis = soup.find("h3",string="Digipolis").find_next(class_="restaurant-menu")
     return digipolis
 def getSearchParameter():
-    dayOfWeek = datetime.datetime.today().weekday()
-    if dayOfWeek == 0:
-        search = "Maandag"
-    elif dayOfWeek == 1:
-        search = "Dinsdag"
-    elif dayOfWeek == 2:
-        search = "Woensdag"
-    elif dayOfWeek == 3:
-        search = "Donderdag"
-    elif dayOfWeek == 4:
-        search = "Vrijdag"
-    else:
-        search = False
+
     return search
 
 logger = logging.getLogger(__name__)
@@ -90,13 +76,27 @@ class Messenger(object):
         self.clients.web.chat.post_message(channel_id, txt, attachments=[attachment], as_user='true')
 
     def send_menu(self, channel_id):
-        search = getSearchParameter
+        dayOfWeek = datetime.datetime.today().weekday()
+        if dayOfWeek == 0:
+            search = "Maandag"
+        elif dayOfWeek == 1:
+            search = "Dinsdag"
+        elif dayOfWeek == 2:
+            search = "Woensdag"
+        elif dayOfWeek == 3:
+            search = "Donderdag"
+        elif dayOfWeek == 4:
+            search = "Vrijdag"
+        else:
+            search = False
         if search != False:
-
             question = "Het menu bij Digipolis is vandaag:"
             self.send_message(channel_id, question)
             self.clients.send_user_typing_pause(channel_id)
-            digipolis = getMenu()
+            response = urllib2.urlopen('http://www.metsense.be/nl/onze-uitbatingen#bedrijfsrestaurants')
+            html = response.read()
+            soup = BeautifulSoup(html,"html.parser")
+            digipolis = soup.find("h3",string="Digipolis").find_next(class_="restaurant-menu")
             for string in  digipolis.find(string=re.compile(search)).find_next("td").stripped_strings:
                 answer = string
             self.send_message(channel_id, answer)
@@ -107,7 +107,10 @@ class Messenger(object):
         question = "Ik kijk even na wat de suggestie deze week is."
         self.send_message(channel_id, question)
         self.clients.send_user_typing_pause(channel_id)
-        digipolis = getMenu()
+        response = urllib2.urlopen('http://www.metsense.be/nl/onze-uitbatingen#bedrijfsrestaurants')
+        html = response.read()
+        soup = BeautifulSoup(html,"html.parser")
+        digipolis = soup.find("h3",string="Digipolis").find_next(class_="restaurant-menu")
 
         for string in  digipolis.find(string=re.compile("Suggestie")).find_next("td").stripped_strings:
             answer = string
