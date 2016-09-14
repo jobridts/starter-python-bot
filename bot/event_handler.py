@@ -50,7 +50,7 @@ class RtmEventHandler(object):
                     self.msg_writer.demo_attachment(event['channel'])
                 elif re.search('menu|soep', msg_txt):
                     self.msg_writer.send_menu(event['channel'])
-                elif re.search('suggestie|van de week', msg_txt):
+                elif re.search('suggestie|van de week|broodje', msg_txt):
                     self.msg_writer.send_suggestie(event['channel'])
                 else:
                     self.msg_writer.write_prompt(event['channel'])
